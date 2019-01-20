@@ -111,15 +111,15 @@ class RobotController:
       [l_laser, a_laser] = self.produceSpeedsLaser()
       
       # You must fill these
-      self.linear_velocity  = l_laser
-      self.angular_velocity = a_laser
+      self.linear_velocity  = 0
+      self.angular_velocity = 0
       
       if self.move_with_target == True:
         [l_goal, a_goal] = self.navigation.velocitiesToNextSubtarget()
         ############################### NOTE QUESTION ############################
         # You must combine the two sets of speeds. You can use motor schema,
         # subsumption of whatever suits your better.
-
+        
         ##########################################################################
       else:
         ############################### NOTE QUESTION ############################
@@ -127,10 +127,15 @@ class RobotController:
         # Hint: Subtract them from something constant
         
         # Make sure speeds are on the range [-3,3]
-        if abs(linear) > 0.3:
-        linear = 0.3 * cmp(linear, 0)
-        if abs(angular) > 0.3:
-          angular = 0.3 * cmp(angular, 0)
+        if abs(l_laser) > 0.3:
+          self.linear_velocity = 0.3 * cmp(l_laser, 0)
+        else:
+          self.linear_velocity = l_laser
+
+        if abs(a_laser) > 0.3:
+          self.angular_velocity = 0.3 * cmp(a_laser, 0)
+        else:
+          self.angular_velocity = a_laser
         ##########################################################################
 
     # Assistive functions
