@@ -283,7 +283,30 @@ class Navigation:
         if self.subtargets and self.next_subtarget <= len(self.subtargets) - 1:
             st_x = self.subtargets[self.next_subtarget][0]
             st_y = self.subtargets[self.next_subtarget][1]
-            
+
+            # Angle of the goal target
+            theta_rg = math.atan2(st_y - ry, st_x - rx)
+
+            # Angle from robot to goal target
+            delta_theta = theta_rg - theta
+
+            # Calculate rotational speed
+            if abs(delta_theta) < math.pi:
+                omega = delta_theta / math.pi
+            elif delta_theta >= 0:
+                omega = (delta_theta - 2 * math.pi) / math.pi
+            else:
+                omega = (delta_theta + 2 * math.pi) / math.pi
+
+            # Calculate linear speed
+            u = (1 - abs(omega))**6
+
+            # Make angular speed more "aggressive"
+            omega = cmp(omega, 0) * abs(omega)**(1.0/6)
+
+            # Speeds must be on the range [-0.3, 0.3]
+            linear = u * 0.3
+            angular = omega * 0.3
         ######################### NOTE: QUESTION  ##############################
 
         return [linear, angular]
