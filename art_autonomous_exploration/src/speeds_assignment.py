@@ -77,7 +77,7 @@ class RobotController:
       scanLen = len(scan)
 
       # Angles of the laser mesurments in rads (0 rads is where the robot facing)
-      angles = [math.radians(135 - x*270/(scanLen - 1)) for x in range(scanLen)]
+      angles = [math.radians(-135 + x*270/(scanLen - 1)) for x in range(scanLen)]
 
       # Calculate the speeds
       linear = -sum([math.cos(angles[x]) / scan[x]**2 for x in range(scanLen)])
@@ -120,12 +120,28 @@ class RobotController:
         # You must combine the two sets of speeds. You can use motor schema,
         # subsumption of whatever suits your better.
         
+        # Combine the tho sets of speeds
+        self.linear_velocity  = l_goal + l_laser**3 * 5e-12
+        self.angular_velocity = a_goal + a_laser**3 * 5e-12
+        
+        # Make sure speeds are on the range [-3,3]
+        if abs(self.linear_velocity) > 0.3:
+          self.linear_velocity = 0.3 * cmp(self.linear_velocity, 0)
+
+        if abs(self.angular_velocity) > 0.3:
+          self.angular_velocity = 0.3 * cmp(self.angular_velocity, 0)
         ##########################################################################
       else:
         ############################### NOTE QUESTION ############################
         # Implement obstacle avoidance here using the laser speeds.
         # Hint: Subtract them from something constant
         
+        # Make sure robot goes forward when it can
+        l_laser += 300
+
+        # Smoother steering
+        a_laser /= 500
+
         # Make sure speeds are on the range [-3,3]
         if abs(l_laser) > 0.3:
           self.linear_velocity = 0.3 * cmp(l_laser, 0)

@@ -299,10 +299,10 @@ class Navigation:
                 omega = (delta_theta + 2 * math.pi) / math.pi
 
             # Calculate linear speed
-            u = (1 - abs(omega))**6
+            u = (1 - abs(omega))**10
 
             # Make angular speed more "aggressive"
-            omega = cmp(omega, 0) * abs(omega)**(1.0/6)
+            omega = math.copysign(abs(omega)**(1.0/6), omega)
 
             # Speeds must be on the range [-0.3, 0.3]
             linear = u * 0.3
