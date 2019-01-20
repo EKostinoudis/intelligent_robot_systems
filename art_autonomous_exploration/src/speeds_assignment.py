@@ -73,6 +73,17 @@ class RobotController:
       # Check what laser_scan contains and create linear and angular speeds
       # for obstacle avoidance
 
+      # Number of laser mesurments per cycle            
+      scanLen = len(scan)
+
+      # Angles of the laser mesurments in rads (0 rads is where the robot facing)
+      angles = [math.radians(135 - x*270/(scanLen - 1)) for x in range(scanLen)]
+
+      # Calculate the speeds
+      linear = -sum([math.cos(angles[x]) / scan[x]**2 for x in range(scanLen)])
+      angular = -sum([math.sin(angles[x]) / scan[x]**2 for x in range(scanLen)])
+
+      # print linear, angular
       ##########################################################################
       return [linear, angular]
 
@@ -100,8 +111,8 @@ class RobotController:
       [l_laser, a_laser] = self.produceSpeedsLaser()
       
       # You must fill these
-      self.linear_velocity  = 0
-      self.angular_velocity = 0
+      self.linear_velocity  = l_laser
+      self.angular_velocity = a_laser
       
       if self.move_with_target == True:
         [l_goal, a_goal] = self.navigation.velocitiesToNextSubtarget()
@@ -114,7 +125,12 @@ class RobotController:
         ############################### NOTE QUESTION ############################
         # Implement obstacle avoidance here using the laser speeds.
         # Hint: Subtract them from something constant
-        pass
+        
+        # Make sure speeds are on the range [-3,3]
+        if abs(linear) > 0.3:
+        linear = 0.3 * cmp(linear, 0)
+        if abs(angular) > 0.3:
+          angular = 0.3 * cmp(angular, 0)
         ##########################################################################
 
     # Assistive functions

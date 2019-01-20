@@ -234,7 +234,6 @@ class RobotPerception:
         yy = self.robot_pose['y_px'] + abs(self.origin['y'] / self.resolution)
         for i in range(-20, 20):
             for j in range(-20, 20):
-                # if self.ogm[xx + i, yy + j] > 49 or self.ogm[xx + i, yy + j] == -1:
                 if self.ogm[int(xx + i), int(yy + j)] > 49 or self.ogm[int(xx + i), int(yy + j)] == -1:
                     continue
                 self.coverage[int(xx + i), int(yy + j)] = 100
