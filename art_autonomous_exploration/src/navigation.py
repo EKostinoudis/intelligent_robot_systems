@@ -230,7 +230,11 @@ class Navigation:
           # Fill the ps.pose.position values to show the path in RViz
           # You must understand what self.robot_perception.resolution
           # and self.robot_perception.origin are.
-        
+          
+          ps.pose.position.x = self.robot_perception.origin["x"] + \
+                               self.robot_perception.resolution * p[0]
+          ps.pose.position.y = self.robot_perception.origin["y"] + \
+                               self.robot_perception.resolution * p[1]
           ########################################################################
           ros_path.poses.append(ps)
         self.path_publisher.publish(ros_path)
