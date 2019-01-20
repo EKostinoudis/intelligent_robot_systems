@@ -90,21 +90,24 @@ class Navigation:
                     self.robot_perception.origin['y'] / self.robot_perception.resolution\
                     ]
 
-        # Find the distance between the robot pose and the next subtarget
-        dist = math.hypot(\
-            rx - self.subtargets[self.next_subtarget][0], \
-            ry - self.subtargets[self.next_subtarget][1])
-
         ######################### NOTE: QUESTION  ##############################
         # What if a later subtarget or the end has been reached before the 
         # next subtarget? Alter the code accordingly.
         # Check if distance is less than 7 px (14 cm)
-        if dist < 5:
-          self.next_subtarget += 1
-          self.counter_to_next_sub = self.count_limit
-          # Check if the final subtarget has been approached
-          if self.next_subtarget == len(self.subtargets):
-            self.target_exists = False
+        
+        # Check if robot reached all the next subtargets 
+        for i in range(self.next_subtarget, len(self.subtargets)):
+            # Find the distance between the robot pose and the next subtarget
+            dist = math.hypot(\
+                rx - self.subtargets[i][0], \
+                ry - self.subtargets[i][1])
+            
+            if dist < 5:
+                self.next_subtarget = i + 1
+                self.counter_to_next_sub = self.count_limit
+            # Check if the final subtarget has been approached
+            if self.next_subtarget == len(self.subtargets):
+                self.target_exists = False
         ########################################################################
         
         # Publish the current target
