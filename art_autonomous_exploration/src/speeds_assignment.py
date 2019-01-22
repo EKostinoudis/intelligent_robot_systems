@@ -121,8 +121,8 @@ class RobotController:
         # subsumption of whatever suits your better.
         
         # Combine the tho sets of speeds
-        self.linear_velocity  = l_goal + l_laser**3 * 5e-12
-        self.angular_velocity = a_goal + a_laser**3 * 5e-12
+        self.linear_velocity  = l_goal + l_laser**3 * 3e-11
+        self.angular_velocity = a_goal + a_laser**3 * 3e-11
         
         # Make sure speeds are on the range [-3,3]
         if abs(self.linear_velocity) > 0.3:
