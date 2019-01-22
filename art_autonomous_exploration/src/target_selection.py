@@ -135,8 +135,9 @@ class TargetSelection:
                 vectorsMean = vectors.mean(axis=0)
                 vectorsVar = vectors.var(axis=0)
                 dists = np.sqrt(np.einsum('ij,ij->i', vectors, vectors))
-                weightCoeff = 1 / (1 - np.exp(-np.sum((vectors - vectorsMean)**2 / (2 * vectorsVar), axis=1)) + 1e-4)
-                weightDists = np.sum(weightCoeff + dists)
+                # weightCoeff = 1 / (1 - np.exp(-np.sum((vectors - vectorsMean)**2 / (2 * (vectorsVar + 1e-3)), axis=1)) + 1e-3)
+                # weightDists = np.sum(weightCoeff + dists)
+                weightDists = np.sum(dists)
 
                 # Topological weight
                 weightTopo = brush[node[0], node[1]]

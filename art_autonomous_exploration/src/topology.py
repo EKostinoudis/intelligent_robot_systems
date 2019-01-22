@@ -3,7 +3,7 @@
 import rospy
 import random
 import math
-import numpy
+import numpy 
 from timeit import default_timer as timer
 from utilities import RvizHandler
 from utilities import Print
@@ -23,20 +23,24 @@ class Topology:
     height = ogm.shape[1]
 
     local = numpy.zeros(ogm.shape)
+    
+    local[ogm < 49] = 1
 
-    for i in range(0, width):
-      for j in range(0, height):
-        if ogm[i][j] < 49:
-          local[i][j] = 1
+    # for i in range(0, width):
+    #   for j in range(0, height):
+    #     if ogm[i][j] < 49:
+    #       local[i][j] = 1
     
     skeleton = Cffi.thinning(local, ogml)
     skeleton = Cffi.prune(skeleton, ogml, 10)
-  
-    viz = []
-    for i in range(0, width):
-      for j in range(0, height):
-        if skeleton[i][j] == 1:
-          viz.append([i * resolution + origin['x'],j * resolution + origin['y']])
+
+    viz = (numpy.array(numpy.where(skeleton == 1)).T * resolution + [origin['x'], origin['y']]).tolist()
+
+    # viz = []
+    # for i in range(0, width):
+    #   for j in range(0, height):
+    #     if skeleton[i][j] == 1:
+    #       viz.append([i * resolution + origin['x'],j * resolution + origin['y']])
 
     RvizHandler.printMarker(\
             viz,\
@@ -51,20 +55,22 @@ class Topology:
     return skeleton
 
   def skeletonization(self, ogm, origin, resolution, ogml):
-    width = ogm.shape[0]
-    height = ogm.shape[1]
+    # width = ogm.shape[0]
+    # height = ogm.shape[1]
 
     useful_ogm = ogm[ ogml['min_x']:ogml['max_x'] , ogml['min_y']:ogml['max_y'] ]
-    useful_width = useful_ogm.shape[0]
-    useful_height = useful_ogm.shape[1]
+    # useful_width = useful_ogm.shape[0]
+    # useful_height = useful_ogm.shape[1]
 
-    local = numpy.zeros(ogm.shape)
+    # local = numpy.zeros(ogm.shape)
     useful_local = numpy.zeros(useful_ogm.shape)
 
-    for i in range(0, useful_width):
-      for j in range(0, useful_height):
-        if useful_ogm[i][j] < 49:
-          useful_local[i][j] = 1
+    useful_local[useful_ogm < 49] = 1
+
+    # for i in range(0, useful_width):
+    #   for j in range(0, useful_height):
+    #     if useful_ogm[i][j] < 49:
+    #       useful_local[i][j] = 1
       
     skeleton = skeletonize(useful_local)
     skeleton = self.pruning(skeleton, 10)
@@ -73,11 +79,13 @@ class Topology:
     skeleton_final = numpy.zeros(ogm.shape)
     skeleton_final[ ogml['min_x']:ogml['max_x'] , ogml['min_y']:ogml['max_y'] ] = skeleton
 
-    viz = []
-    for i in range(0, width):
-      for j in range(0, height):
-        if skeleton_final[i][j] == 1:
-          viz.append([i * resolution + origin['x'],j * resolution + origin['y']])
+    viz = (numpy.array(numpy.where(skeleton_final == 1)).T * resolution + [origin['x'], origin['y']]).tolist()
+
+    # viz = []
+    # for i in range(0, width):
+    #   for j in range(0, height):
+    #     if skeleton_final[i][j] == 1:
+    #       viz.append([i * resolution + origin['x'],j * resolution + origin['y']])
 
     RvizHandler.printMarker(\
             viz,\
@@ -98,6 +106,12 @@ class Topology:
     
     width = ogm.shape[0]
     height = ogm.shape[1]
+
+    # TODO later
+    # index = numpy.where((ogm[1:width - 1, 1: height - 1] <= 49) & \
+    #                     (brush[1:width - 1, 1: height - 1] > 3) & \
+    #                     (skeleton[1:width - 1, 1: height - 1] == 1) & \
+    #                     (coverage[1:width - 1, 1: height - 1] != 100))
 
     for i in range(1, width - 1):
       for j in range(1, height - 1):
