@@ -3,7 +3,8 @@
 import rospy
 import random
 import math
-import numpy 
+import numpy
+from scipy.spatial import distance_matrix
 from timeit import default_timer as timer
 from utilities import RvizHandler
 from utilities import Print
@@ -107,40 +108,51 @@ class Topology:
     width = ogm.shape[0]
     height = ogm.shape[1]
 
-    # TODO later
-    # index = numpy.where((ogm[1:width - 1, 1: height - 1] <= 49) & \
-    #                     (brush[1:width - 1, 1: height - 1] > 3) & \
-    #                     (skeleton[1:width - 1, 1: height - 1] == 1) & \
-    #                     (coverage[1:width - 1, 1: height - 1] != 100))
+    index = numpy.where((ogm[1:width - 1, 1: height - 1] <= 49) & \
+                        (brush[1:width - 1, 1: height - 1] > 3) & \
+                        (skeleton[1:width - 1, 1: height - 1] == 1) & \
+                        (coverage[1:width - 1, 1: height - 1] != 100))
 
-    for i in range(1, width - 1):
-      for j in range(1, height - 1):
-        if ogm[i][j] <= 49 and brush[i][j] > 3 and \
-            skeleton[i][j] == 1 and coverage[i][j] != 100:
-          c = 0
-          for ii in range(-1, 2):
-            for jj in range(-1, 2):
-              c = c + skeleton[i + ii][j + jj]
+    for i in range(len(index[0])):
+      c = numpy.sum(skeleton[index[0][i]:index[0][i] + 3, index[1][i]:index[1][i] + 3])
+      if (c == 2 or c == 4):
+        nodes.append([index[0][i] + 1, index[1][i] + 1])
+
+    # for i in range(1, width - 1):
+    #   for j in range(1, height - 1):
+    #     if ogm[i][j] <= 49 and brush[i][j] > 3 and \
+    #         skeleton[i][j] == 1 and coverage[i][j] != 100:
+    #       c = 0
+    #       for ii in range(-1, 2):
+    #         for jj in range(-1, 2):
+    #           c = c + skeleton[i + ii][j + jj]
           
-          if (c == 2 or c == 4): # and coverage etc
-            nodes.append([i, j])
-
+    #       if (c == 2 or c == 4): # and coverage etc
+    #         nodes.append([i, j])
+    
     # minimize number of nodes by erasing
-    change = True
-    while change:
-      change = False
-      for i in range(0, len(nodes)):
-        for j in range(0, len(nodes)):
-          if i == j:
-            continue
-          n1 = nodes[i]
-          n2 = nodes[j]
-          if math.pow(n1[0] - n2[0], 2) + math.pow(n1[1] - n2[1], 2) < 25:
-            change = True
-            del nodes[i]
-            break
-        if change:
-          break
+    # change = True
+    # while change:
+    #   change = False
+    #   for i in range(0, len(nodes)):
+    #     for j in range(0, len(nodes)):
+    #       if i == j:
+    #         continue
+    #       n1 = nodes[i]
+    #       n2 = nodes[j]
+    #       if math.pow(n1[0] - n2[0], 2) + math.pow(n1[1] - n2[1], 2) < 25:
+    #         change = True
+    #         del nodes[i]
+    #         break
+    #     if change:
+    #       break
+    
+    for i in range(0, len(nodes) - 1, -1):
+      for j in range(i + 1, len(nodes) -1):
+        n1 = nodes[i]
+        n2 = nodes[j]
+        if math.pow(n1[0] - n2[0], 2) + math.pow(n1[1] - n2[1], 2) < 25:
+          del nodes[i]
 
     return nodes
 
