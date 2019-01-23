@@ -20,8 +20,8 @@ from skimage.morphology import skeletonize
 class Topology:
 
   def skeletonizationCffi(self, ogm, origin, resolution, ogml):
-    width = ogm.shape[0]
-    height = ogm.shape[1]
+    # width = ogm.shape[0]
+    # height = ogm.shape[1]
 
     local = numpy.zeros(ogm.shape)
     
@@ -147,12 +147,16 @@ class Topology:
     #     if change:
     #       break
     
-    for i in range(0, len(nodes) - 1, -1):
-      for j in range(i + 1, len(nodes) -1):
-        n1 = nodes[i]
+    for i in range(len(nodes) - 2, -1, -1):
+      n1 = nodes[i]
+      
+      j = i + 1
+      while j < len(nodes):  
         n2 = nodes[j]
         if math.pow(n1[0] - n2[0], 2) + math.pow(n1[1] - n2[1], 2) < 25:
           del nodes[i]
+        else:
+          j += 1
 
     return nodes
 
