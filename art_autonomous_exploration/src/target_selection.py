@@ -132,11 +132,11 @@ class TargetSelection:
                 vectors = path[1:, :] - path[:-1, :]
 
                 # Calculate paths weighted distance
-                vectorsMean = vectors.mean(axis=0)
-                vectorsVar = vectors.var(axis=0)
-                dists = np.sqrt(np.einsum('ij,ij->i', vectors, vectors))
+                # vectorsMean = vectors.mean(axis=0)
+                # vectorsVar = vectors.var(axis=0)
                 # weightCoeff = 1 / (1 - np.exp(-np.sum((vectors - vectorsMean)**2 / (2 * (vectorsVar + 1e-3)), axis=1)) + 1e-3)
                 # weightDists = np.sum(weightCoeff + dists)
+                dists = np.sqrt(np.einsum('ij,ij->i', vectors, vectors))
                 weightDists = np.sum(dists)
 
                 # Topological weight

@@ -9,7 +9,7 @@ from utilities import RvizHandler
 from utilities import Cffi
 from sets import Set
 import scipy.misc
-import time
+
 #scipy.misc.imsave('/home/manos/Desktop/test.png', self.coverage)
 
 class Brushfires:
