@@ -46,7 +46,7 @@ class Cffi:
       # for i in range(ogm.shape[0]):
       #   for j in range(ogm.shape[1]):
       #     brush[i][j] = yi[i][j]
-      brush = np.array(y)
+      brush[:ogm.shape[0], :ogm.shape[1]] = np.array(y)
 
       return brush
 
