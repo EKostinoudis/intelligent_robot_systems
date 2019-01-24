@@ -1,3 +1,9 @@
+# Inteligent Rogot Systems Exercise Solution
+This repository consists of the solution of the exercise for the class Intelligent System Robots,\
+Department of Electrical and Computer Engineering,\
+Aristotle University Of Thessaloniki, Greece,\
+9th Semester, 2018-2019.
+
 ## Intelligent Robot Systems exercise
 
 This code was created in order to allow experimentation towards developing specific modules of an autonomous simulated vehicle that performs full exploration **and coverage** of an unknown a priori environment. Next, you can find instructions on how to setup the code in your PC / laptop, the description of the code, as well as the description challenges.
