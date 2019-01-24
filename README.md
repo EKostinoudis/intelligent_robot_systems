@@ -1,5 +1,5 @@
 # Inteligent Rogot Systems Exercise Solution
-This repository consists of the solution of the exercise from the class Intelligent System Robots,\
+This repository consists of the solution of the exercise for the class Intelligent System Robots,\
 Department of Electrical and Computer Engineering,\
 Aristotle University Of Thessaloniki, Greece,\
 9th Semester, 2018-2019.
